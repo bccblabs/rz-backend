@@ -177,11 +177,10 @@ User.getAll = function (callback) {
 User.createAndPatch = function (props, callback) {
   var query = [
       'merge (user:User {user_id: {user_id_}})',
-      'on match set user.accessed = timestamp()',
-      'on create set user.created = timestamp()',
-      'on create set user.picture = {picture_large}',
-      'on create set user.updated = {updated_time_}',
-      'on create set user.name={name_}',
+      'set user.accessed = timestamp()',
+      'set user.picture = {picture}',
+      'set user.updated = {updated_time_}',
+      'set user.name={name_}',
       'with {identities} as identities',
       'unwind identities as identity',
       'match (u:User {user_id: {user_id_}})',
@@ -191,7 +190,7 @@ User.createAndPatch = function (props, callback) {
       params = {
         user_id_: props.user_id,
         name_: props.name,
-        picture_large: props.picture_large,
+        picture: props.picture,
         nickname_: props.nickname,
         updated_time_: props.updated_time,
         identities: props.identities

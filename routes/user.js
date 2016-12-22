@@ -131,7 +131,8 @@ exports.fetchAuth0Profile = function (req, res, next) {
 
   request (opts)
   .then (function (body) {
-    var profileBody = JSON.parse (body)
+    var profileBody = JSON.parse (body)            
+    console.log  (JSON.stringify (body,null, 2))
         User.createAndPatch (profileBody, function (userCreateError, newUser) {
           if (userCreateError) {
             console.error('UserCreateError\nerror=', userCreateError)

@@ -112,7 +112,8 @@ exports.listBySpecs = function (req, res, next) {
 }
 
 exports.create = function (req, res, next) {
-
+  console.log (req.params, req.body, req.query)
+  res.status (201).json({msg: 'post created!'})
 }
 
 exports.createBuildPost = function (req, res, next) {

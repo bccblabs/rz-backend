@@ -83,6 +83,13 @@ Tuning.searchByManufacturer = function (props, callback) {
         manufacturerId_: props.manufacturerId
       },
       session = driver.session()
+
+  if (props.name === undefined || props.name === null) {
+    query = [
+        'match (m:Manufacturer {manufacturerId: {manufacturerId_}})-[:manufacture]-(part:Part)-[ts:has_tuning]-(s:Specs {specId: {specId_}})',
+        'return part, ts',
+      ].join ('\n')
+  }
       session.run (query, params)
               .then (function (record) {
                 callback (null, util.parseParts (record.records))

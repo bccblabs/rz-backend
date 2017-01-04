@@ -6,6 +6,8 @@ var car = require ('./car')
   , user = require ('./user')
   , deal = require ('./deal')
   , build = require ('./build')
+  , manufacturer = require ('./manufacturer')
+
 
 exports.car = module.exports.car = car
 exports.event = module.exports.event = event
@@ -15,3 +17,4 @@ exports.tuning = module.exports.tuning = tuning
 exports.user = module.exports.user = user
 exports.deal = module.exports.deal = deal
 exports.build = module.exports.build = build
+exports.manufacturer = module.exports.manufacturer = manufacturer

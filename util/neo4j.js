@@ -258,3 +258,9 @@ exports.parsePartDetails = function (records) {
   )
 }
 
+exports.parseManufacturers = function (records) {
+  console.log (records)
+  return records.records.map ((rec)=>(rec._fields[0].properties))
+  var fields = records
+}
+

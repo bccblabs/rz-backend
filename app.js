@@ -104,10 +104,13 @@ app.get ('/tuning/spec/:specId/manufacturers', routes.tuning.listManufacturers)
 app.post ('/tuning/manufacturer/:manufacturerId/spec/:specId', routes.tuning.searchByManufacturer)
 app.get ('/tuning/manufacturer/:manufacturerId/parts', routes.tuning.listPartsByManufacturer)
 
+app.get ('/manufacturer', routes.manufacturer.list)
+app.get ('/manufacturer/:manufacturerId', routes.manufacturer.get)
 
 
 // show posts
 app.get ('/post', routes.post.list)
+app.post ('/post', routes.post.create)
 app.get ('/post/build/:buildId', routes.post.listByBuild)
 app.get ('/post/part/:partId', routes.post.listByPart)
 app.get ('/post/spec/:specId', routes.post.listBySpecs)

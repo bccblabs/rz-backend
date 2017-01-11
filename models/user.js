@@ -190,7 +190,7 @@ User.createAndPatch = function (props, callback) {
       params = {
         user_id_: props.user_id,
         name_: props.name,
-        picture: props.picture,
+        picture: props.picture_large,
         nickname_: props.nickname,
         updated_time_: props.updated_time,
         identities: props.identities

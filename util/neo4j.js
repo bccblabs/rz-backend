@@ -24,7 +24,7 @@ exports.parsePosts = function (rec) {
       postId: rec._fields[0].properties.postId,
       postType: rec._fields[5],
       build: rec._fields[6]?rec._fields[6].properties:null,
-      part: rec._fields[7]?rec._fields[7].properties:null,
+      part: rec._fields[7]?rec._fields[7].map ((part)=>(part.properties)):null,
       specId: rec._fields[8]
     }
   })

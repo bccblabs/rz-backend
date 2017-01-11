@@ -112,76 +112,22 @@ exports.listBySpecs = function (req, res, next) {
 }
 
 exports.create = function (req, res, next) {
-  console.log (req.params, req.body, req.query)
-  res.status (201).json({msg: 'post created!'})
-}
-
-exports.createBuildPost = function (req, res, next) {
-
   var params = {
-        authorId: req.body.authorId,
-        buildId: req.params.buildId,
-        postId: shortid.generate(),
+    userId_: req.body.userId,
+    buildId_: req.body.buildId ? req.body.buildId : shortid.generate(),
+    buildProps: req.body.buildId ? req.body.buildSpecs : Object.assign (req.body.buildSpecs, {media: [req.body.location], name: req.body.newBuild.name, specId: req.body.buildSpecs.specId}),
 
-        created: Date.now(),
-        media: req.body.media,
-        mediaType: req.body.mediaType,
-        text: req.body.text,
+    postProps: {media: req.body.location, text: req.body.text, postId: shortid.generate(), created: Date.now(), mediaType: req.body.mediaType},
+    relProps: {postType: 'build_log'},
+    partIds: req.body.partIds,
+  }
 
-        tags: req.body.tags?req.body.tags:[],  
-        // [new_build | build_log | build_comment]
-        postType: req.body.type
-      }
-  console.log (params)
-
-  Post.createBuildPost (params, (err, data) => {
+  Post.create (params, (err, data) => {
     if (err) next (err)
-    else res.status (201).end()
+    else res.status (201).json({msg: 'post created!'})
   })
 }
 
-exports.createPartPost = function (req, res, next) {
-  var params = {
-        authorId: req.body.authorId,
-        partId: req.params.partId,
-        postId: shortid.generate(),
-        specId: req.body.specId,
-        created: Date.now(),
-        media: req.body.media,
-        mediaType: req.body.mediaType,
-        text: req.body.text,
-
-        //[new_part | build_log | part_comment]
-        postType: req.body.type
-      }
-
-  Post.simplePartPost (params, (err, data) => {
-    if (err) next (err)
-    else res.status (201).end()
-  })
-}
-
-exports.createUserPost = function (req, res, next) {
-  var params = {
-        authorId: req.body.authorId,
-        userId: req.params.userId,
-
-        created: Date.now(),
-        media: req.body.media,
-        mediaType: req.body.mediaType,
-        text: req.body.text,
-
-        postType: req.body.type
-      }
-  Post.createUserPost (params, (err, data) => {
-    if (err) next (err)
-    else res.status (201).end()
-  })
-}
-
-exports.createManufacturerPost = function (req, res, next) {
-  
-}
 
 exports.update = function (req, res, next) {
   next()

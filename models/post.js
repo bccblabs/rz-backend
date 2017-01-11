@@ -90,7 +90,7 @@ Post.list = function (props, callback) {
         'optional match (p)-[:has_post]-(part:Part)',
         'optional match (p)-[:has_like]-(l)',
         'optional match (p)-[:has_comment]-(c)',
-        'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, part, s.specId',
+        'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, collect(part), s.specId',
         'order by p.created desc',
         'skip {skipCount}',
         'limit {pageSize}'
@@ -123,7 +123,7 @@ Post.listByUser = (props, callback) => {
     'optional match (p)-[:has_post]-(part:Part)',
     'optional match (p)-[:has_like]-(l)',
     'optional match (p)-[:has_comment]-(c)',
-    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, part, s.specId',
+    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, collect(part), s.specId',
     'order by p.created desc',
     'skip {skipCount}',
     'limit {pageSize}'
@@ -160,7 +160,7 @@ Post.listByBuild = (props, callback) => {
     'optional match (p)-[:has_post]-(part:Part)',
     'optional match (p)-[:has_like]-(l)',
     'optional match (p)-[:has_comment]-(c)',
-    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, part, s.specId',
+    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, collect(part), s.specId',
     'order by p.created desc',
     'skip {skipCount}',
     'limit {pageSize}'
@@ -194,7 +194,7 @@ Post.listByPart = (props, callback) => {
     'optional match (p)-[:has_post]-(part:Part)',
     'optional match (p)-[:has_like]-(l)',
     'optional match (p)-[:has_comment]-(c)',
-    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, part, s.specId',
+    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, collect(part), s.specId',
     'order by p.created desc',
     'skip {skipCount}',
     'limit {pageSize}'
@@ -229,7 +229,7 @@ Post.listBySpecs = (props, callback) => {
     'optional match (p)-[:has_post]-(part:Part)',
     'optional match (p)-[:has_like]-(l)',
     'optional match (p)-[:has_comment]-(c)',
-    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, part, s.specId',
+    'return p, collect(t.name), u, collect (l), count (c), postRel.postType, build, collect(part), s.specId',
     'order by p.created desc',
     'skip {skipCount}',
     'limit {pageSize}'
@@ -252,6 +252,31 @@ Post.listBySpecs = (props, callback) => {
              console.error (err)
              callback (err)
            })
+}
+
+Post.create = (props, callback) => {
+  var query = [
+    'match (author:User {user_id: {userId_}}), (s:Specs {specId: {buildProps}.specId})',
+    'merge (s)-[:has_build]-(b:Build {buildId: {buildId_}})-[:has_build]-(author) set b += {buildProps}',
+    'with author, b',
+    'merge (author)-[r:has_post]-(p:Post {postId: {postProps}.postId})-[:has_post]-(b) set p={postProps}, r={relProps}',
+    'with p, b',
+    'unwind {partIds} as partid',
+    'optional match (part:Part {partId: partid})',
+    'with p, part, b',
+    'merge (part)-[:has_post]-(p)',
+    'merge (b)-[:has_part]-(part)'
+  ].join ('\n')
+  , session = driver.session ()
+
+    session.run (query, props)
+          .then ((res)=> {
+            callback (null)
+          })
+          .catch (function (err) {
+            console.error (err)
+            callback (err)
+  })
 }
 
 // new_build, build_journal, build_comment
@@ -300,129 +325,3 @@ Post.createBuildPost = (props, callback) => {
         })
 }
 
-Post.simplePartPost = (props, callback) => {
-  var query = [
-        'match (author:User {user_id: {authorId_}})',
-        'match (part:Part {partId: {partId_}})',
-        'with part, author',
-        'merge (author)-[r:has_post]-(p:Post {postId: {postId_}})-[:has_post]-(part) set p={postProps}, r={relProps}',
-      ].join ('\n')
-    , params = {
-        authorId_: props.authorId,
-        partId_: props.partId,
-        postId_: props.postId,
-        postProps: {
-          created: props.created,
-          postId: props.postId,
-          media: props.media,
-          mediaType: props.mediaType,
-          text: props.text,
-          specId: props.specId
-        },
-        relProps: {
-          postType: props.postType,
-        }
-      }
-    , session = driver.session ()
-
-    session.run (query, params)
-          . then (function (res) {
-            callback (null)
-          })
-          .catch (function (err) {
-            console.error (err)
-            callback (err)
-          })
-
-}
-
-// build_log, part_comment
-Post.createPartPost = (props, callback) => {
-  var query = [
-      'match (author:User {user_id: {authorId_}})',
-      'match (part:Part {partId: {partId_}})',
-
-      'with part, author',
-      'merge (author)-[r:has_post]-(p:Post {postId: {postId_}})-[:has_post]-(part) set p={postProps}, r={relProps}',
-      'with p',
-      'match (b:Build {buildId: {buildId_}}), (p:Post {postId: p.postId})',
-      'with b,p',
-      'merge (b)-[:has_post]-(p)',
-      'with p',
-      'unwind {tags} as rawtag',
-      'merge (t:Tag {name: rawtag})', 
-      'with t',
-      'match (p:Post {postId: {postId_}}), (tag:Tag {name: t.name})',
-      'with p, tag',
-      'merge (tag)-[:has_tag]-(p)'
-      ].join ('\n')
-    , params = {
-        authorId_: props.authorId,
-        partId_: props.partId,
-        postId_: props.postId,
-        buildId_: props.buildId,
-
-        postProps: {
-          created: props.created,
-          postId: props.postId,
-          media: props.media,
-          mediaType: props.mediaType,
-          text: props.text
-        },
-        tags: props.tags,
-        relProps: {
-          postType: props.postType
-        }
-    }
-
-    , session = driver.session ()
-
-    session.run (query, params)
-          . then (function (res) {
-            callback (null)
-          })
-          .catch (function (err) {
-            console.error (err)
-            callback (err)
-          })
-}
-
-Post.createUserPost = (props, callback) => {
-  var query = [
-      'match (u:User {userId: {authorId_}})',
-      'match (author:User {user_id: {userId_}})',
-      'with u, author',
-      'merge (author)-[:has_post]-(p:Post {postId: {postId_}})-[r:has_post]-(user) set p={postProps}, r={relProps}'
-      ].join ('\n')
-    , params = {
-        authorId_: props.authorId,
-        userId_: props.userId,
-        postId_: props.postId,
-
-        postProps: {
-          created: props.created,
-          postId: props.postId,
-          media: props.media,
-          mediaType: props.mediaType,
-          text: props.text          
-        },
-
-        relProps: {
-          postType: props.postType
-        }
-    }
-    , session = driver.session ()
-
-    session.run (query, params)
-          . then (function (res) {
-            callback (null)
-          })
-          .catch (function (err) {
-            console.error (err)
-            callback (err)
-          })
-}
-
-Post.createManufacturerPost = (props, callback) => {
-
-}

@@ -117,11 +117,6 @@ app.get ('/post/spec/:specId', routes.post.listBySpecs)
 app.get ('/post/user/:userId', routes.post.listByUser)
 
 // create posts
-app.post ('/post/batchCreate', routes.post.batchCreate)
-app.post ('/post/build/:buildId', routes.post.createBuildPost)
-app.post ('/post/part/:partId', routes.post.createPartPost)
-app.post ('/post/user/:userId', routes.post.createUserPost)
-
 
 // get post 
 app.get ('/post/:postId', routes.post.get)

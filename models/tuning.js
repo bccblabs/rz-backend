@@ -52,11 +52,10 @@ Tuning.create = function (props, callback) {
 
 Tuning.search = function (props, callback) {
   var query = [
-        'match (t:TuningTag)-[:has_tag]-(p:Part)-[ts:has_tuning]-(s:Specs {specId: {specId_}}) where t.name in {tags}',
+        'match (p:Part)-[ts:has_tuning]-(s:Specs {specId: {specId_}})',
         'return p, ts',
       ].join ('\n'),
       params = {
-        tags: props.tags,
         specId_: props.specId
       },
       session = driver.session()

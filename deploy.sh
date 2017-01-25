@@ -14,7 +14,7 @@ make_task_def () {
     task_template='[
         {
             "name": "backend",
-            "image": "842535892764.dkr.ecr.us-west-2.amazonaws.com/backend:%s",
+            "image": "808855890887.dkr.ecr.us-east-1.amazonaws.com/tunesquad-backend:%s",
             "essential": true,
             "memory": 200,
             "cpu": 4,

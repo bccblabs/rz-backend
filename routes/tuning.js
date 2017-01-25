@@ -53,7 +53,6 @@ exports.delete = function (req, res, next) {
 exports.search = function (req, res, next) {
   var params = {
     specId: req.params.specId,
-    tags: req.body.data
   }
   Tuning.search (params, function (tuningSearchError, tuningParts) {
     if (tuningSearchError) return next (tuningSearchError)

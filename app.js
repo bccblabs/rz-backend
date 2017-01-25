@@ -96,7 +96,7 @@ app.get ('/tuning/parts/:partId', routes.tuning.get)
 app.put ('/tuning/parts/:partId', routes.tuning.update)
 app.delete ('/tuning/parts/:delete', routes.tuning.delete)
 
-app.post ('/tuning/spec/:specId', routes.tuning.search)
+app.get ('/tuning/spec/:specId', routes.tuning.search)
 app.get ('/tuning/spec/:specId/tags', routes.tuning.getTags)
 app.get ('/tuning/spec/:specId/tags/:tagName', routes.tuning.listByTag)
 

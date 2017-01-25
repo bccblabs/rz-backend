@@ -4,12 +4,12 @@ var aws = require ('aws-sdk')
   , async = require ('async')
   , rootPath = '/Users/bski/Dev/microservices/social/posts/'
   , thumbnailPath = '/Users/bski/Desktop/'
-  , s3BucketUrl = 'https://s3.amazonaws.com/raaz-part-images/'
-  , s3BucketName = 'raaz-part-images'
+  , s3BucketUrl = 'https://s3.amazonaws.com/tunesquad/'
+  , s3BucketName = 'tunesquad'
   , sizeOf = require ('image-size')
   , Upload = require('s3-uploader')
-  , accessKeyId = 'AKIAJC4RSF66ZHF6VKYQ'
-  , secretAccessKey = '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'
+  , accessKeyId = 'AKIAIYR6P6AQEO3NW2LQ'
+  , secretAccessKey = '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'
   , _ = require ('lodash')
   , s3Client = new Upload (s3BucketName, {
       aws: {

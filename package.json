@@ -1,5 +1,5 @@
 {
-  "name": "ms-social",
+  "name": "tunesq-backend",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
@@ -46,5 +46,9 @@
     "start": "node-dev app.js",
     "test": "mocha test/*/*.js",
     "test-unit": "NODE_ENV=test mocha test/*/*.spec.js"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:bski006/rz-backend.git",
+  "author": "bo chen",
+  "license": "my shit"
 }

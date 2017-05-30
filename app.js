@@ -25,10 +25,10 @@ app.use(cookieParser());
 app.set('port', process.env.PORT || 8080);
 dotenv.load()
 
-var authenticate = jwt({
-  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
-  audience: process.env.AUTH0_CLIENT_ID
-})
+// var authenticate = jwt({
+//   secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+//   audience: process.env.AUTH0_CLIENT_ID
+// })
 
 /*
   /user/
@@ -42,10 +42,10 @@ var authenticate = jwt({
     - can either be car, car listing, part, part listing
     - no update needed
 */
-app.get('/socialSignIn', routes.user.fetchAuth0Profile);
-app.get('/user/:user_id', routes.user.get)
-app.put('/user/:user_id', routes.user.edit);
-app.delete('/user/:user_id', routes.user.del);
+// app.get('/socialSignIn', routes.user.fetchAuth0Profile);
+// app.get('/user/:user_id', routes.user.get)
+// app.put('/user/:user_id', routes.user.edit);
+// app.delete('/user/:user_id', routes.user.del);
 
 /*
   /cars/
@@ -118,7 +118,7 @@ app.get ('/post/user/:userId', routes.post.listByUser)
 
 // create posts
 
-// get post 
+// get post
 app.get ('/post/:postId', routes.post.get)
 app.put ('/post/:postId', routes.post.update)
 app.delete ('/post/:postId', routes.post.delete)
@@ -146,8 +146,13 @@ app.get ('/build/manufacturer/:manufacturerId', routes.build.listByManufacturer)
 app.get ('/build/details/:buildId', routes.build.get)
 app.get ('/build/details/:buildId/part/:category', routes.build.listBuildPart)
 
+app.get ('*', (req, res)=>(res.status(404).end()));
 var port = process.env.PORT || 8080;
 
 http.createServer(app).listen(port, function (err) {
-  console.log('listening in http://localhost:' + port);
+  if (err) {
+    throw new Error (err);
+  } else {
+    console.log('listening in http://localhost:' + port);
+  }
 });

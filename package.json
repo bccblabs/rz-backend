@@ -43,7 +43,7 @@
     "node": "4.5.0"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node-dev app.js",
     "test": "mocha test/*/*.js",
     "test-unit": "NODE_ENV=test mocha test/*/*.spec.js"
   },
